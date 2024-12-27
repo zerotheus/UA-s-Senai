@@ -27,6 +27,6 @@ interface UsuarioRepository :Persistencia<Usuario>{
     override fun edit(model: Usuario)
 
     @Delete
-    override fun delete(id: Usuario)
+    override suspend fun delete(id: Usuario)
 
 }

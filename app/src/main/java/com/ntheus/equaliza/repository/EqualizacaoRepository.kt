@@ -15,13 +15,16 @@ interface EqualizacaoRepository :Persistencia<Equalizacao>{
     override suspend fun save(model: Equalizacao)
 
     @Delete
-    override fun delete(id: Equalizacao)
+    override suspend fun delete(id: Equalizacao)
 
     @Update
     override fun edit(model: Equalizacao)
 
     @Query(value = "Select * from Equalizacoes where id = :id")
     override fun getById(id: Int): Flow<Equalizacao>
+
+    @Query(value = "Select * from Equalizacoes where usuarioId = :id")
+    suspend fun getOneById(id: Int): Equalizacao?
 
     @Query(value = "Select * from Equalizacoes where usuarioId = :userId")
     fun getAllByUserId(userId:Int):List<Equalizacao>

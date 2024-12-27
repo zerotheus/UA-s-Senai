@@ -10,6 +10,6 @@ interface Persistencia<T> {
 
     fun getById(id:Int):Flow<T>
 
-    fun delete(id: T)
+    suspend fun  delete(id: T)
 
 }

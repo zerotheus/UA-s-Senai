@@ -27,6 +27,12 @@ class EqualizerController {
     fun save(model: Equalizacao) :Equalizacao{
         runBlocking {
             launch {
+                //Isso de fato limita o app, mas é apenas uma maneira de testar as funcionalidades do room
+                val equalizacao = load(model.getUsuarioId())
+                if (equalizacao != null){
+                    equalizacaoRepository.delete(equalizacao)
+                    Toast.makeText(context,"Equalizada Salva, Anterior foi Sobrescrita", Toast.LENGTH_LONG).show()
+                }
                 equalizacaoRepository.save(model);
                 Toast.makeText(context,"Equalizada Salva", Toast.LENGTH_LONG).show()
             }
@@ -34,8 +40,8 @@ class EqualizerController {
         return model;
     }
 
-    fun load(userId:Int){
-
+    suspend fun load(userId:Int):Equalizacao? {
+        return equalizacaoRepository.getOneById(userId)
     }
 
 }

@@ -1,6 +1,8 @@
 package com.ntheus.equaliza.view
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
@@ -10,29 +12,34 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
 import com.ntheus.equaliza.R
 import com.ntheus.equaliza.builders.EqualizerBuilder
 import com.ntheus.equaliza.controller.EqualizerController
+import com.ntheus.equaliza.model.Equalizacao
 import com.ntheus.equaliza.model.Usuario
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class Equalizer : AppCompatActivity() {
 
-    private lateinit var botaoVoltar:ImageButton
-    private lateinit var botaoSalvar:Button
-    private lateinit var botaoCarregar:Button
+    private lateinit var botaoVoltar: ImageButton
+    private lateinit var botaoSalvar: Button
+    private lateinit var botaoCarregar: Button
     private val equalizerBuilder = EqualizerBuilder()
-    private var sliders:MutableList<SeekBar> = mutableListOf()
+    private var sliders: MutableList<SeekBar> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val equalizerController = EqualizerController(this.applicationContext,this)
+        val equalizerController = EqualizerController(this.applicationContext, this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_equalizer)
         try {
             supportActionBar!!.show()
 
-        }catch (e:Exception){
-            Log.i("Error",e.toString())
+        } catch (e: Exception) {
+            Log.i("Error", e.toString())
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -57,9 +64,30 @@ class Equalizer : AppCompatActivity() {
             equalizerBuilder.umKiloHz(sliders.get(3).progress.toShort())
             equalizerBuilder.doisPontoQuatroHz(sliders.get(4).progress.toShort())
             equalizerBuilder.quinzeKiloHz(sliders.get(5).progress.toShort())
-            var usuario:Usuario = intent.getSerializableExtra("usuario") as Usuario
+            var usuario: Usuario = intent.getSerializableExtra("usuario") as Usuario
             equalizerController.save(equalizerBuilder.build(usuario))
         })
+        val handler = Handler(Looper.getMainLooper())
         botaoCarregar = findViewById(R.id.buttonCarregar)
+        botaoCarregar.setOnClickListener({
+            var usuario: Usuario = intent.getSerializableExtra("usuario") as Usuario
+            var equalizada: Equalizacao?
+            runBlocking {
+                launch {
+                    equalizada = equalizerController.load(usuario.getUid())
+                    if (equalizada == null) {
+                        return@launch
+                    }
+                    handler.post {
+                        sliders.get(0).progress = equalizada!!.getSessentaHz().toInt()
+                        sliders.get(1).progress = equalizada!!.getCentoECinquentaHz().toInt()
+                        sliders.get(2).progress = equalizada!!.getQuatroCentosHz().toInt()
+                        sliders.get(3).progress = equalizada!!.getUmKiloHz().toInt()
+                        sliders.get(4).progress = equalizada!!.getDoisPontoQuatroKiloHz().toInt()
+                        sliders.get(5).progress = equalizada!!.getQuinzeKiloHz().toInt()
+                    }
+                }
+            }
+        })
     }
 }
