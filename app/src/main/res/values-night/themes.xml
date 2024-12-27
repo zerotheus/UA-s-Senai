@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Equaliza" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:background">@color/spotifyBlack</item>
+    </style>
+    <style name="Button">
+
+    </style>
+    <style name="Button.green">
+        <item name="colorPrimary">@color/spotifyGreen</item>
+    </style>
+    <style name="Button.register">
+        <item name="colorPrimary">@color/spotifyBlack</item>
+        <item name="android:textColor">@color/spotifyGreen</item>
+    </style>
+</resources>

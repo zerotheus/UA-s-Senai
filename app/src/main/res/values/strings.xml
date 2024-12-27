@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">equaliza</string>
+    <string name="login">Login</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="equaliza">Equaliza!</string>
+    <string name="user">user</string>
+    <string name="password">password</string>
+    <string name="_2_4khz">2.4Khz</string>
+    <string name="_1khz">1Khz</string>
+    <string name="_400hz">400hz</string>
+    <string name="_60hz">60hz</string>
+    <string name="_150hz">150hz</string>
+    <string name="_15khz">15Khz</string>
+    <string name="carregar">Carregar</string>
+    <string name="salvar">Salvar</string>
+    <string name="equalizadas">Equalizadas</string>
+</resources>
